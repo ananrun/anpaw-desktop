@@ -6,4 +6,6 @@
 
 4.主进程、preload代码用esbuild编译压缩，增加asar解包后阅读成本。
 
-5.
+5.增加前端工程相关工具，eslint，prettier，editorconfig等。
+
+6.
