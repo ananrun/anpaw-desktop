@@ -4,28 +4,66 @@
   "description": "harness desktop",
   "main": "main/index.js",
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "make:win": "electron-forge make --platform=win32",
-    "make:linux": "electron-forge make --platform=linux",
-    "make:linux:deb": "electron-forge make --platform=linux --targets=@electron-forge/maker-deb",
-    "make:linux:rpm": "electron-forge make --platform=linux --targets=@electron-forge/maker-rpm",
-    "make:linux:x64": "electron-forge make --platform=linux --arch=x64",
-    "make:linux:arm64": "electron-forge make --platform=linux --arch=arm64",
-    "make:mac": "electron-forge make --platform=darwin",
-    "make:mac:x64": "electron-forge make --platform=darwin --arch=x64",
-    "make:mac:arm64": "electron-forge make --platform=darwin --arch=arm64",
+    "start": "electron .",
+    "package": "electron-builder --dir",
+    "make": "electron-builder",
+    "make:win": "electron-builder --win nsis",
+    "make:linux": "electron-builder --linux",
+    "make:linux:deb": "electron-builder --linux deb",
+    "make:linux:rpm": "electron-builder --linux rpm",
+    "make:linux:x64": "electron-builder --linux --x64",
+    "make:linux:arm64": "electron-builder --linux --arm64",
+    "make:linux:deb:x64": "electron-builder --linux deb --x64",
+    "make:linux:deb:arm64": "electron-builder --linux deb --arm64",
+    "make:linux:rpm:x64": "electron-builder --linux rpm --x64",
+    "make:linux:rpm:arm64": "electron-builder --linux rpm --arm64",
+    "make:mac": "electron-builder --mac zip",
+    "make:mac:x64": "electron-builder --mac zip --x64",
+    "make:mac:arm64": "electron-builder --mac zip --arm64",
+    "make:mac:universal": "electron-builder --mac zip --universal",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "build": {
+    "appId": "com.changan.anpaw",
+    "productName": "anpaw-desktop",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main/**/*",
+      "renderer/**/*",
+      "preload.js",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "renderer/resources/logo-zhua.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "target": [
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm"
+      ]
+    }
   },
   "author": "chang-an",
   "license": "ISC",
   "devDependencies": {
-    "@electron-forge/cli": "^8.0.1",
-    "@electron-forge/maker-deb": "^8.0.1",
-    "@electron-forge/maker-rpm": "^8.0.1",
-    "@electron-forge/maker-squirrel": "^8.0.1",
-    "@electron-forge/maker-zip": "^8.0.1",
-    "electron": "^44.9.0"
+    "electron": "^44.9.0",
+    "electron-builder": "^26.15.3"
   }
 }
