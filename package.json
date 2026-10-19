@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:electron\"",
     "dev:renderer": "vite --host 127.0.0.1",
-    "dev:electron": "wait-on tcp:127.0.0.1:5173 && npm run build:electron && cross-env ELECTRON_RENDERER_URL=http://127.0.0.1:5173 electron .",
+    "dev:electron": "wait-on tcp:127.0.0.1:5173 && nodemon --watch main --watch preload.js --ext js,cjs --delay 300ms --exec \"npm run build:electron && cross-env ELECTRON_RENDERER_URL=http://127.0.0.1:5173 electron .\"",
     "build": "npm run build:renderer && npm run build:electron",
     "build:renderer": "vite build",
     "build:electron": "esbuild main/index.js --bundle --platform=node --target=node22 --external:electron --minify --outfile=build/main/index.cjs && esbuild preload.js --bundle --platform=node --target=node22 --external:electron --minify --outfile=build/preload.cjs",
@@ -71,10 +71,14 @@
     "eslint-plugin-react-refresh": "^0.5.7",
     "globals": "^17.13.0",
     "less": "^4.9.1",
+    "nodemon": "^3.1.14",
     "prettier": "^3.9.10",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "vite": "^7.3.1",
     "wait-on": "^9.0.1"
+  },
+  "dependencies": {
+    "react-router-dom": "^7.18.4"
   }
 }
