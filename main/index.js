@@ -11,7 +11,7 @@ const createWindow = () => {
     }
   })
 
-  win.loadFile('renderer/index.html')
+  win.loadFile(path.join(__dirname, '../renderer/index.html'))
 }
 
 app.whenReady().then(() => {
