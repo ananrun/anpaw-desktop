@@ -31,6 +31,9 @@
       "package.json"
     ],
     "asar": true,
+    "asarUnpack": [
+      "renderer/resources/anpaw/**"
+    ],
     "win": {
       "target": [
         "nsis"

@@ -11,3 +11,9 @@ contextBridge.exposeInMainWorld('webBrowser', {
   hide: () => ipcRenderer.invoke('browser:hide'),
   navigate: (url) => ipcRenderer.invoke('browser:navigate', url)
 })
+
+contextBridge.exposeInMainWorld('anpaw', {
+  status: () => ipcRenderer.invoke('anpaw:status'),
+  start: () => ipcRenderer.invoke('anpaw:start'),
+  stop: () => ipcRenderer.invoke('anpaw:stop')
+})

@@ -1,6 +1,7 @@
 node_modules/
 build/
 renderer/dist/
+renderer/resources/anpaw/
 release/
 out/
 *.ico

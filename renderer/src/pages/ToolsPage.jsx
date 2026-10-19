@@ -1,6 +1,5 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-const initialBrowserUrl = 'https://www.baidu.com'
 
 function RobotIllustration() {
   return (
@@ -29,12 +28,29 @@ function RobotIllustration() {
 
 export default function ToolsPage() {
   const navigate = useNavigate()
+  const [anpaw, setAnpaw] = useState({ state: 'stopped', message: '正在读取服务状态…' })
+  const [isStarting, setIsStarting] = useState(false)
 
-  const openBrowser = () => {
-    window.webBrowser.show()
-    void window.webBrowser.navigate(initialBrowserUrl)
-    navigate('/browser')
+  useEffect(() => {
+    void window.anpaw.status().then(setAnpaw)
+  }, [])
+
+  const openAnpaw = async () => {
+    setIsStarting(true)
+    try {
+      const status = anpaw.state === 'running' ? anpaw : await window.anpaw.start()
+      setAnpaw(status)
+      if (status.state === 'running') {
+        window.webBrowser.show()
+        await window.webBrowser.navigate(status.url)
+        navigate('/browser', { state: { url: status.url } })
+      }
+    } finally {
+      setIsStarting(false)
+    }
   }
+
+  const stopAnpaw = async () => setAnpaw(await window.anpaw.stop())
 
   return (
     <main className="tools-page">
@@ -46,21 +62,46 @@ export default function ToolsPage() {
       </button>
       <section className="tools-card" aria-labelledby="tools-title">
         <RobotIllustration />
-        <p className="tools-eyebrow">ANPAW DESKTOP</p>
-        <h1 id="tools-title">工具中心</h1>
-        <p className="tools-description">从这里开始，打开你需要的小工具。</p>
-        <div className="tools-actions">
-          <button className="tools-primary-button" type="button" onClick={openBrowser}>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="8.5" />
-              <path d="M3.8 12h16.4M12 3.5c2.2 2.4 3.3 5.2 3.3 8.5S14.2 18.1 12 20.5C9.8 18.1 8.7 15.3 8.7 12S9.8 5.9 12 3.5Z" />
-            </svg>
-            打开网页浏览
-          </button>
-          <button className="tools-secondary-button" type="button" onClick={() => navigate('/')}>
-            回到主页
-          </button>
-        </div>
+        <p className="tools-description">启动本地智能体实验台。</p>
+        <section className="anpaw-tool" aria-labelledby="anpaw-title">
+          <div className="anpaw-tool-heading">
+            <div>
+              <p className="anpaw-tool-eyebrow">LOCAL AGENT LAB</p>
+              <h2 id="anpaw-title">AnPaw 智能体实验台</h2>
+            </div>
+            <span className={`anpaw-status anpaw-status-${anpaw.state}`}>
+              <i />
+              {anpaw.state === 'running'
+                ? '运行中'
+                : anpaw.state === 'starting'
+                  ? '启动中'
+                  : anpaw.state === 'error'
+                    ? '异常'
+                    : '未启动'}
+            </span>
+          </div>
+          <p className="anpaw-tool-description">
+            使用本机打包产物启动 AnPaw，可选择智能体、模型并查看 Agent Loop 运行链路。
+          </p>
+          <p className="anpaw-message" role={anpaw.state === 'error' ? 'alert' : 'status'}>
+            {anpaw.message}
+          </p>
+          <div className="anpaw-actions">
+            <button
+              className="anpaw-open-button"
+              type="button"
+              onClick={openAnpaw}
+              disabled={isStarting}
+            >
+              {isStarting ? '启动中…' : anpaw.state === 'running' ? '打开实验台' : '启动并打开'}
+            </button>
+            {anpaw.state === 'running' && (
+              <button className="anpaw-stop-button" type="button" onClick={stopAnpaw}>
+                停止服务
+              </button>
+            )}
+          </div>
+        </section>
       </section>
     </main>
   )

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const initialBrowserUrl = 'https://www.baidu.com'
 
 export default function BrowserPage() {
+  const location = useLocation()
   const navigate = useNavigate()
-  const [url, setUrl] = useState(initialBrowserUrl)
+  const [url, setUrl] = useState(location.state?.url || initialBrowserUrl)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
