@@ -36,7 +36,9 @@ export default function HomePage() {
   return (
     <main className="app">
       <div className="title">
-        <div className="title-item">Tools</div>
+        <button className="title-item" type="button" onClick={() => navigate('/tools')}>
+          Tools
+        </button>
         <button className="title-item" type="button" onClick={openBrowser}>
           More
         </button>

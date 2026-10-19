@@ -1,6 +1,6 @@
 const { shell, WebContentsView } = require('electron')
 
-const browserToolbarHeight = 68
+const browserToolbarHeight = 52
 
 const normalizeUrl = (value) => {
   if (typeof value !== 'string' || !value.trim()) return null
