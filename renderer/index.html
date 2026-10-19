@@ -2,21 +2,12 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="./resources/logo-zhua.png" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <title>来自 Electron 渲染器的问好！</title>
+    <title>anpaw-desktop</title>
   </head>
   <body>
-    <h1>来自 Electron 渲染器的问好！</h1>
-    <p>👋</p>
-    <p id="info"></p>
+    <div id="root"></div>
   </body>
-  <script src="./renderer.js"></script>
+  <script type="module" src="/src/main.jsx"></script>
 </html>

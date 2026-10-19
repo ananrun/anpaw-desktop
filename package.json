@@ -2,26 +2,17 @@
   "name": "anpaw-desktop",
   "version": "1.0.0",
   "description": "harness desktop",
-  "main": "main/index.js",
+  "main": "build/main/index.cjs",
   "scripts": {
-    "start": "electron .",
-    "package": "electron-builder --dir",
-    "make": "electron-builder",
-    "make:win": "electron-builder --win nsis",
-    "make:linux": "electron-builder --linux",
-    "make:linux:deb": "electron-builder --linux deb",
-    "make:linux:rpm": "electron-builder --linux rpm",
-    "make:linux:x64": "electron-builder --linux --x64",
-    "make:linux:arm64": "electron-builder --linux --arm64",
-    "make:linux:deb:x64": "electron-builder --linux deb --x64",
-    "make:linux:deb:arm64": "electron-builder --linux deb --arm64",
-    "make:linux:rpm:x64": "electron-builder --linux rpm --x64",
-    "make:linux:rpm:arm64": "electron-builder --linux rpm --arm64",
-    "make:mac": "electron-builder --mac zip",
-    "make:mac:x64": "electron-builder --mac zip --x64",
-    "make:mac:arm64": "electron-builder --mac zip --arm64",
-    "make:mac:universal": "electron-builder --mac zip --universal",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:electron\"",
+    "dev:renderer": "vite --host 127.0.0.1",
+    "dev:electron": "wait-on tcp:127.0.0.1:5173 && npm run build:electron && cross-env ELECTRON_RENDERER_URL=http://127.0.0.1:5173 electron .",
+    "build": "npm run build:renderer && npm run build:electron",
+    "build:renderer": "vite build",
+    "build:electron": "esbuild main/index.js --bundle --platform=node --target=node22 --external:electron --minify --outfile=build/main/index.cjs && esbuild preload.js --bundle --platform=node --target=node22 --external:electron --minify --outfile=build/preload.cjs",
+    "make:win": "npm run build && electron-builder --win nsis",
+    "make:linux": "npm run build && electron-builder --linux",
+    "make:mac": "npm run build && electron-builder --mac zip"
   },
   "build": {
     "appId": "com.changan.anpaw",
@@ -30,9 +21,9 @@
       "output": "release"
     },
     "files": [
-      "main/**/*",
-      "renderer/**/*",
-      "preload.js",
+      "build/**/*",
+      "renderer/dist/**/*",
+      "renderer/resources/**/*",
       "package.json"
     ],
     "asar": true,
@@ -63,7 +54,15 @@
   "author": "chang-an",
   "license": "ISC",
   "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.1",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
     "electron": "^44.9.0",
-    "electron-builder": "^26.15.3"
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.25.12",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "vite": "^7.3.1",
+    "wait-on": "^9.0.1"
   }
 }
